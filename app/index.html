@@ -1,12 +1,192 @@
 ---
-title: 首頁
+title: World Clock
 layout: ./app/layout.ejs
 engine: ejs
 current: index
 ---
+<h2 id="new-clock">+</h2>
+<ul id="clock-list">
+  <!-- <li>
+    <section class="city">
+      <div calss="offset-hour">-15HRS</div>
+      <div calss="city-name">Taipei</div>
+    </section>
+    <section class="time">
+      4:25PM
+    </section>
+  </li>
+  <li>
+    <section class="city">
+      <div calss="offset-hour">-15HRS</div>
+      <div calss="city-name">Taipei</div>
+    </section>
+    <section class="time">
+      4:25PM
+    </section>
+  </li> -->
+</ul>
 
-<h1>
-  Lorem ipsum dolor sit amet, consectetur adipisicing elit. Fugiat, aliquid? Enim obcaecati dolores, dolor error reprehenderit, illum aut repellat, iure repudiandae atque incidunt perferendis omnis laboriosam non tempore. Nulla, quibusdam!
-</h1>
+<div class="modal">
+</div>
 
-<div class="box"></div>
+<!-- <script src="./assets/js/index.js"></script> -->
+
+<script>
+  console.log('index')
+
+  const timezones = [
+  {
+    name: 'Taipei, Taiwan',
+    timezone: 'Asia/Taipei'
+  },
+  {
+    name: 'Seoul, South Korea',
+    timezone: 'Asia/Seoul'
+  },
+  {
+    name: 'Tokyo, Japan',
+    timezone: 'Asia/Tokyo'
+  },  
+  {
+    name: 'Phoenix, U.S.A.',
+    timezone: 'America/Phoenix'
+  },
+  {
+    name: 'New York, U.S.A.',
+    timezone: 'America/New_York'
+  },
+  {
+    name: 'Montreal, Canada',
+    timezone: 'America/Montreal'
+  },
+  {
+    name: 'Vancouver, Canada',
+    timezone: 'America/Vancouver'
+  },
+  {
+    name: 'Mexico City, U.S.A.',
+    timezone: 'America/Mexico_City'
+  },
+  {
+    name: 'Cairo, Egypt',
+    timezone: 'Africa/Cairo'
+  },
+  {
+    name: 'Dubai, U.A.E.',
+    timezone: 'Asia/Dubai'
+  },
+]
+
+const myList = [
+  {
+    name: 'Taipei, Taiwan',
+    timezone: 'Asia/Taipei'
+  },
+  {
+    name: 'Vancouver, Canada',
+    timezone: 'America/Vancouver'
+  },
+];
+
+
+class Clock {
+  constructor(city, timezone) {
+    this.city = city;
+    this.timezone = timezone;
+  }
+
+  currentTime() {
+    return new Date(Date.now());
+  }
+
+  localTime() {
+    return this.currentTime().toLocaleTimeString('en-US', { timeZone: this.timezone, hour: '2-digit', minute:'2-digit'});
+  }
+
+  timezoneOffset() {
+    return -(this.localTime().getTimezoneOffset() / 60);
+  }
+
+  localTimestamp() {
+    const localeDateTimeString = this.currentTime().toLocaleString('en-US', { timeZone: this.timezone})
+    return Date.parse(localeDateTimeString);
+  }
+
+  hourDiff() {
+    const local = Date.parse(new Date(Date.now()))
+    const diff = (this.localTimestamp() - local) / 1000 / 60 / 60;
+    
+    // console.log(diff.toString().includes('-') || `+${diff}`)
+    return diff.toString().includes('-') ? diff : `+${diff}`;
+  }
+}
+
+const newBtn = document.querySelector('#new-clock')
+const modalEl = document.querySelector('.modal');
+const modalUl = document.createElement('UL');
+const clockUl = document.querySelector('#clock-list');
+
+const clockTemplate = `
+  <section class="city">
+    <div class="offset-hour"></div>
+    <div class="city-name"></div>
+  </section>
+  <section class="time-string">
+    <p><span class="time"></span><span class="period"></span></p>
+  </section>
+`;
+
+(function renderTimezoneList() {
+  
+  modalUl.classList.add('timezone-list');
+
+  timezones.forEach((item, index) => {
+    const li = document.createElement('LI');
+    li.setAttribute('data-timezone', index);
+    // li.setAttribute('data-timezone', item.timezone);
+    li.innerText = item.name;
+    modalUl.appendChild(li)
+
+    li.addEventListener('click', createClock)
+  });
+})();
+
+function createClock(e) {
+  modalEl.classList.toggle('active');
+
+  myList.push(timezones[e.target.dataset.timezone]);
+  // const city = e.target.innerText;
+  // const cityTimezone = e.target.dataset.timezone;
+  renderClock();
+}
+
+function renderClock() {
+  clockUl.innerHTML = '';
+  myList.forEach((item) => {
+    const clock = new Clock(item.name, item.timezone);
+    const timeString = clock.localTime().split(' ');
+    // console.log(clock);
+    let li = document.createElement('LI');
+    li.innerHTML = clockTemplate;
+    li.querySelector('.offset-hour').innerText = `${clock.hourDiff()}HRS`;
+    li.querySelector('.city-name').innerText = clock.city;
+
+    li.querySelector('.time').innerText = timeString[0];
+    li.querySelector('.period').innerText = timeString[1];
+
+
+    clockUl.appendChild(li)
+  })
+}
+
+function modal() {
+  
+  modalEl.classList.toggle('active');
+  modalEl.appendChild(modalUl);
+}
+
+setInterval(renderClock, 1000);
+
+renderClock()
+newBtn.addEventListener('click', modal);
+</script>

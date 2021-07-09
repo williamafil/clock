@@ -1,0 +1,93 @@
+#new-clock {
+  position: absolute;
+  top: -70px;
+  right: 20px;
+  color: $orange-400;
+  font-size: 2rem;
+  font-weight: semi-bold;
+  cursor: pointer;
+}
+
+#new-clock:hover {
+  color: $orange-300;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+h2 {
+  padding: 2px;
+  background-color: #ccc;
+  cursor: pointer;
+}
+
+.modal {
+  background-color: #eee;
+  position: absolute;
+  margin: 0 auto;
+  top: 15%;
+  left: 0;
+  right: 0;
+
+  width: 90%;
+  display: none;
+  z-index: 1000;
+}
+
+.active {
+  display: block;
+}
+
+#clock-list {
+  display: flex;
+  flex-direction: column;
+}
+
+#clock-list li {
+  display: flex;
+  justify-content: space-between;
+  background-color: pink;
+  margin-bottom: 4px;
+  padding: 4px;
+}
+
+#clock-list section {
+  
+  align-self: center;
+}
+
+#clock-list .time {
+  font-size: 1.5rem;
+}
+
+.timezone-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.timezone-list li {
+  padding: 4px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

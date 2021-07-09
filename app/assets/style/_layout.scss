@@ -1,0 +1,159 @@
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-size: 16px;
+  font-family: "Noto Sans TC", sans-serif;
+  background-color: $trueGray-100;
+  color: $trueGray-50;
+
+  width: 100vw;
+  height: 100vh;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+
+/*
+*   🍍 CONTAINER
+*/
+.container {
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto;
+
+  background-color: $trueGray-800;
+}
+
+header {
+  height: 100px;
+  padding: 1rem;
+  background-color: $trueGray-700;
+
+  .wrapper {
+    width: 100%;
+    height: 100%;
+    border-bottom: 1px solid $trueGray-500;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  h1 {
+    font-size: 2.5rem;
+    font-weight: bold;
+  }
+}
+
+main {
+  position: relative;
+  height: 612px;
+
+  .new-clock {
+    font-size: 2.5rem;
+    font-weight: semi-bold;
+    margin-right: 1rem;
+  }
+
+
+  h1 {
+    letter-spacing: 10px;
+  }
+}
+
+footer {
+  height: 100px;
+  padding: 1rem;
+  background-color: $trueGray-700;
+  border-top: 1px solid $trueGray-500;
+}
+
+
+
+nav {
+  ul {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  li {
+    width: 25%;
+    display: flex;
+
+
+    cursor: pointer;
+
+    h3 {
+      font-size: .8rem;
+      margin-top: .3em;
+    }
+  }
+
+  // li:hover {
+  //   color: $orange-300;
+    
+  //   svg {
+  //     color: $orange-300;
+  //   }
+  // }
+
+  a {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    color: $trueGray-50;
+    font-weight: bold;
+    text-decoration: none;
+  }
+
+  a:hover {
+    color: $orange-300;
+    
+    svg {
+      color: $orange-300;
+    }
+  }
+
+  .svg-holder {
+    width: 36px;
+    height: 36px;
+  }
+
+  svg {
+    width: 100%;
+    height: 100%;
+    
+  }
+
+  li:nth-child(3) .svg-holder {
+    width: 38px;
+    height: 38px;
+  }
+
+}
+
+a.active, a:active, a:focus {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  h3{
+    color: $orange-400;
+  }
+
+  svg {
+    color: $orange-400;
+  }
+}
+
+
+
