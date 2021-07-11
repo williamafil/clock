@@ -181,10 +181,9 @@ current: index
 
       clockUl.appendChild(li)
       li.querySelector('.delete-btn').addEventListener('click', (e) => {
-        const clockIndex = e.target.parentNode.parentNode.dataset.index;
         myList.splice(index, 1);
         updateStorage('clock', myList);
-      })
+      });
     })
   }
 

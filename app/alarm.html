@@ -25,26 +25,36 @@ current: alarm
       <label class="label">吃藥藥 💊</label>
     </section>
     <section class="switch">
-      <div class="state-switch"><input class="state" type="checkbox" checked /></div>
+      <div class="state-switch">
+        <label class="switch">
+          <input class="state" type="checkbox" checked />
+          <span class="slider"></span>
+        </label>
+      </div>
     </section>  
   </li>
 </ul>
 
 <div class="modal newAlarmModal">
   <div class="modal-content">
-    <div>
+    <div class="row">
       <label for="alarm-label">Label: </label>
       <input id="alarm-label" type="text" name="alarm-label" value="Morning Call 🌭" />
     </div>
     
-    <div>
+    <div class="row">
       <label for="alarm-time">Alarm Time: </label>
       <input id="alarm-time" type="time" name="alarm-time" value="07:30" />
     </div>
 
-    <div>
-      <input id="alarm-state" type="checkbox" name="alarm-state" checked />
-      <label for="alarm-state">Active </label>
+    <div class="row">
+      <label for="alarm-state">Active: </label>
+      <label class="switch">
+        <input id="alarm-state" class="state" type="checkbox" checked />
+        <span class="slider"></span>
+      </label>
+
+      
     </div>
   </div>
   <div class="modal-footer">
@@ -76,7 +86,12 @@ current: alarm
       <label class="label"></label>
     </section>
     <section class="switch">
-      <div class="state-switch"><input class="state" type="checkbox" checked /></div>
+      <div class="state-switch">
+        <label class="switch">
+          <input class="state" type="checkbox" checked />
+          <span class="slider"></span>
+        </label>
+      </div>
     </section>  
   `;
 
@@ -85,7 +100,7 @@ current: alarm
 
   const defaultList = [
     {
-      label: '吃藥藥 💊',
+      label: '吃早餐 🍔🍟',
       time: '21:15',
       state: true
     },
@@ -154,13 +169,20 @@ current: alarm
       li.querySelector('.period').innerText = `${timeString[1]}`;
       li.querySelector('.label').innerText = item.label;
       li.querySelector('.state').checked = item.state;
-      
+      editMode && li.querySelector('.delete-btn').classList.remove('hidden')
+
       alarmUl.appendChild(li);
 
+      // switch
       li.querySelector('.state').addEventListener('click', function(e) {
         alarmList[index].state = !alarmList[index].state
         updateStorage('alarms', alarmList);
-      })
+      });
+      // delete btn
+      li.querySelector('.delete-btn').addEventListener('click', (e) => {
+        alarmList.splice(index, 1);
+        updateStorage('clock', alarmList);
+      });
     });
   }
 
@@ -185,6 +207,7 @@ current: alarm
 
   function editAlarm() {
     editMode = !editMode;
+    editMode ? editBtn.innerText = 'Done' : editBtn.innerText = 'Edit'
   }
 
   function updateStorage(key, array) {
