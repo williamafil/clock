@@ -9,7 +9,7 @@ current: index
   <h2 id="new-clock">+</h2>
 </div>
 
-<ul id="clock-list">
+<ul class="main-list">
   <!-- <li>
     <section class="city">
       <div calss="offset-hour">-15HRS</div>
@@ -30,8 +30,7 @@ current: index
   </li> -->
 </ul>
 
-<div class="modal">
-</div>
+<div class="modal"></div>
 
 <script>
   const timezones = [
@@ -139,19 +138,15 @@ current: index
     }
   }
 
-  const editBtn = document.querySelector('#edit-clock')
-  const newBtn = document.querySelector('#new-clock')
+  const editBtn = document.querySelector('#edit-clock');
+  const newBtn = document.querySelector('#new-clock');
   const modalEl = document.querySelector('.modal');
   const modalUl = document.createElement('UL');
-  const clockUl = document.querySelector('#clock-list');
+  const clockUl = document.querySelector('.main-list');
   let editMode = false;
 
-  const taipei = new Clock('Taipei', 'Asia/Taipei');
-  const vancouver = new Clock('Vancouver', 'America/Vancouver');
-
-
   const clockTemplate = `
-  <div class="delete-clock hidden"><span>Delete</span></div>
+  <div class="delete-btn hidden"><span>Delete</span></div>
   <section class="city">
     <div class="offset-hour"></div>
     <div class="city-name"></div>
@@ -196,7 +191,7 @@ current: index
       let li = document.createElement('LI');
       li.setAttribute('data-index', index);
       li.innerHTML = clockTemplate;
-      editMode && li.querySelector('.delete-clock').classList.remove('hidden')
+      editMode && li.querySelector('.delete-btn').classList.remove('hidden')
       li.querySelector('.offset-hour').innerText = `${clock.dateDiff()}, ${clock.hourDiff()}HRS`;
       li.querySelector('.city-name').innerText = clock.city.split(',')[0];
 
@@ -204,7 +199,7 @@ current: index
       li.querySelector('.period').innerText = timeString[1];
 
       clockUl.appendChild(li)
-      li.querySelector('.delete-clock').addEventListener('click', (e) => {
+      li.querySelector('.delete-btn').addEventListener('click', (e) => {
         const clockIndex = e.target.parentNode.parentNode.dataset.index;
         myList.splice(index, 1);
         updateStorage('clock', myList);
@@ -219,6 +214,7 @@ current: index
 
   function editClock() {
     editMode = !editMode;
+    editMode ? editBtn.innerText = 'Done' : editBtn.innerText = 'Edit'
   }
 
   setInterval(renderClock, 1000);

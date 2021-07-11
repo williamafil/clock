@@ -4,9 +4,114 @@ layout: ./app/layout.ejs
 engine: ejs
 current: alarm
 ---
-<h2>alarm</h2>
+<div class="edit-new-wrapper">
+  <h2 id="edit-clock">Edit</h2>
+  <h2 id="new-clock">+</h2>
+</div>
 
+<ul class="main-list">
+  <li data-index="0">
+    <div class="delete-btn hidden"><span>Delete</span></div>
+    <section class="alarm time-string">
+      <p><span class="time">02:58</span><span class="period">PM</span></p>
+      <label class="label">吃藥藥 💊</label>
+    </section>
+    <section class="city">
+      <div class="offset-hour">Today, +0HRS</div>
+      <div class="city-name">Taipei</div>
+    </section>  
+  </li>
+</ul>
+
+<div class="modal">
+  <div class="modal-content">
+    <div>
+      <label for="alarm-label">Label: </label>
+      <input id="alarm-label" type="text" name="alarm-label" value="Morning Call 🌭" />
+    </div>
+    
+    <div>
+      <label for="alarm-time">Alarm Time: </label>
+      <input id="alarm-time" type="time" name="alarm-time" value="07:30" />
+    </div>
+
+    <div>
+      <input id="alarm-state" type="checkbox" name="alarm-state" checked />
+      <label for="alarm-state">Active </label>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <input id="cancel-btn" type="button" value="Cancel" />
+    <input id="save-btn" type="button" value="Save" />
+  </div>
+</div>
 
 <script>
   console.log('alarm')
+
+  const editBtn = document.querySelector('#edit-clock');
+  const newBtn = document.querySelector('#new-clock');
+  const modalEl = document.querySelector('.modal');
+  const cancelBtn = document.querySelector('#cancel-btn');
+  const saveBtn = document.querySelector('#save-btn');
+
+  let editMode = false;
+
+  const alarmList = [];
+
+  class Alarm {
+    constructor(name, time) {
+      this.name = name;
+      this.time = time;
+    }
+
+    currentTime() {
+      return new Date(Date.now());
+    }
+
+    alarmTime() {
+      const datetime = new Date()
+      const time = this.time.split(':')
+      datetime.setHours(parseInt(time[0]))
+      datetime.setMinutes(parseInt(time[1]))
+      datetime.setSeconds(0)
+
+      return datetime;
+    }
+
+  }
+
+  const alarm1 = new Alarm('Morning Call', '13:30')
+  
+
+  function renderAlarm() {
+    const li = document.createElement('LI');
+  }
+
+
+  function modal() {
+    modalEl.classList.toggle('active');
+  }
+
+  function editAlarm() {
+    editMode = !editMode;
+  }
+  cancelBtn.addEventListener('click', function() {
+    modalEl.classList.toggle('active');
+    console.log('cancel')
+    
+  });
+
+  saveBtn.addEventListener('click', function() {
+    const obj = {
+      label: document.querySelector('#alarm-label').value,
+      time: document.querySelector('#alarm-time').value,
+      state: document.querySelector('#alarm-state').checked
+    }
+    alarmList.push(obj)
+    modalEl.classList.toggle('active');
+  });
+
+  editBtn.addEventListener('click', editAlarm);
+  newBtn.addEventListener('click', modal);
 </script>

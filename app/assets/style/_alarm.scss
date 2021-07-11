@@ -1,0 +1,33 @@
+.main-list {
+  li {
+    section {
+
+      .offset-hour {
+        font-size: .9rem;
+        font-weight: 400;
+        margin-bottom: .2em;
+      }
+      .city-name {
+        font-size: 1.7rem;
+        font-weight: bold;
+        letter-spacing: .02rem;
+      }
+      .time {
+        font-size: 3rem;
+        font-weight: 200;
+      }
+      .label {
+        font-size: 1.1rem;
+        font-weight: 400;
+        letter-spacing: .08rem;
+        padding-left: .2em;
+      }
+    }  
+
+  }
+
+  li:first-child {
+    // border-top: 1px solid $trueGray-700;
+    // padding-top: .5em;
+  }
+}

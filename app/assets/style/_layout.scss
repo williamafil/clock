@@ -65,6 +65,66 @@ main {
   }
 }
 
+.main-list {
+  display: flex;
+  flex-direction: column;
+  
+  li {
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid $trueGray-700;
+    padding: 1.5em 1em 1.5em 1em;
+    position: relative;
+
+    section {
+      align-self: center;
+      .offset-hour {
+        font-size: .9rem;
+        font-weight: 400;
+        margin-bottom: .2em;
+      }
+      .city-name {
+        font-size: 1.7rem;
+        font-weight: bold;
+        letter-spacing: .02rem;
+      }
+      .time {
+        font-size: 3.5rem;
+        font-weight: 200;
+      }
+    }  
+
+  }
+
+  li:first-child {
+    // border-top: 1px solid $trueGray-700;
+    padding-top: .5em;
+  }
+
+  .delete-btn {
+    z-index: 100;
+    background-color: red;
+    height: 80%;
+    width: 70px;
+    position: absolute;
+    top: 10%;
+    left: 0;
+    cursor: pointer;
+    span {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+  }
+
+  .delete-btn:hover {
+    // width: 100px;
+    background-color: rgb(255, 70, 45);
+  }
+}
+
 footer {
   height: 100px;
   padding: 1rem;
