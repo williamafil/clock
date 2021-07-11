@@ -9,26 +9,7 @@ current: index
   <h2 id="new-clock">+</h2>
 </div>
 
-<ul class="main-list">
-  <!-- <li>
-    <section class="city">
-      <div calss="offset-hour">-15HRS</div>
-      <div calss="city-name">Taipei</div>
-    </section>
-    <section class="time">
-      4:25PM
-    </section>
-  </li>
-  <li>
-    <section class="city">
-      <div calss="offset-hour">-15HRS</div>
-      <div calss="city-name">Taipei</div>
-    </section>
-    <section class="time">
-      4:25PM
-    </section>
-  </li> -->
-</ul>
+<ul class="main-list"></ul>
 
 <div class="modal"></div>
 
@@ -178,7 +159,7 @@ current: index
   }
 
   function updateStorage(key, clockArray) {
-    storage.removeItem('clocks');
+    storage.removeItem(key);
     storage.setItem(key, JSON.stringify(clockArray));
   }
 

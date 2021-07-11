@@ -4,6 +4,14 @@ layout: ./app/layout.ejs
 engine: ejs
 current: alarm
 ---
+<div class="alarmingModal modal">
+  <div class="modal-content">
+
+    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" class="iconify iconify--ph" width="32" height="32" preserveAspectRatio="xMidYMid meet" viewBox="0 0 256 256"><path d="M211.805 112a83.707 83.707 0 0 0-83.167-83.998l-.64-.002a83.9 83.9 0 0 0-83.795 84c0 33.445-6.784 52.136-12.475 61.926a20.093 20.093 0 0 0-.05 20.065A19.76 19.76 0 0 0 48.984 204H84.19a43.992 43.992 0 0 0 87.62 0h35.207a19.759 19.759 0 0 0 17.303-10.008a20.09 20.09 0 0 0-.047-20.062c-5.688-9.79-12.468-28.483-12.468-61.93zM128 220a20.033 20.033 0 0 1-19.597-16h39.194A20.033 20.033 0 0 1 128 220zm-72.366-40c10.293-21.549 12.57-48.447 12.57-68a59.9 59.9 0 0 1 59.799-60l.457.002A59.706 59.706 0 0 1 187.805 112c0 19.553 2.274 46.45 12.562 68zM233.835 73.338a11.99 11.99 0 0 1-16.067-5.462a100.318 100.318 0 0 0-36.476-40.51a12 12 0 1 1 12.81-20.296a124.3 124.3 0 0 1 45.195 50.2a12 12 0 0 1-5.462 16.068zM27.459 74.576a12.006 12.006 0 0 1-10.756-17.305a124.3 124.3 0 0 1 45.195-50.2a12 12 0 1 1 12.81 20.294a100.318 100.318 0 0 0-36.476 40.511a12 12 0 0 1-10.773 6.7z" fill="currentColor"></path></svg>
+    <input class="clearAlarm" type="button" value="Clear Alarm" />
+  </div>
+</div>
+
 <div class="edit-new-wrapper">
   <h2 id="edit-clock">Edit</h2>
   <h2 id="new-clock">+</h2>
@@ -16,14 +24,13 @@ current: alarm
       <p><span class="time">02:58</span><span class="period">PM</span></p>
       <label class="label">吃藥藥 💊</label>
     </section>
-    <section class="city">
-      <div class="offset-hour">Today, +0HRS</div>
-      <div class="city-name">Taipei</div>
+    <section class="switch">
+      <div class="state-switch"><input class="state" type="checkbox" checked /></div>
     </section>  
   </li>
 </ul>
 
-<div class="modal">
+<div class="modal newAlarmModal">
   <div class="modal-content">
     <div>
       <label for="alarm-label">Label: </label>
@@ -46,27 +53,71 @@ current: alarm
   </div>
 </div>
 
+
+
 <script>
   console.log('alarm')
 
   const editBtn = document.querySelector('#edit-clock');
   const newBtn = document.querySelector('#new-clock');
-  const modalEl = document.querySelector('.modal');
+  const modalEl = document.querySelector('.newAlarmModal');
+  const alarmUl = document.querySelector('.main-list');
   const cancelBtn = document.querySelector('#cancel-btn');
   const saveBtn = document.querySelector('#save-btn');
+  const alarmingModal = document.querySelector('.alarmingModal')
 
   let editMode = false;
+  let alarmMode = false;
 
-  const alarmList = [];
+  const alarmTemplate = `
+  <div class="delete-btn hidden"><span>Delete</span></div>
+    <section class="alarm time-string">
+      <p><span class="time"></span><span class="period"></span></p>
+      <label class="label"></label>
+    </section>
+    <section class="switch">
+      <div class="state-switch"><input class="state" type="checkbox" checked /></div>
+    </section>  
+  `;
+
+  const sound = new Audio('https://assets.mixkit.co/sfx/preview/mixkit-classic-alarm-995.mp3');
+  sound.loop = true;
+
+  const defaultList = [
+    {
+      label: '吃藥藥 💊',
+      time: '21:15',
+      state: true
+    },
+    {
+      label: 'Morning Call 🌤️',
+      time: '07:20',
+      state: false
+    }
+  ];
+
+  const storage = window.localStorage;
+  storage.alarms || storage.setItem('alarms', JSON.stringify(defaultList))
+  const alarmList = JSON.parse(storage.alarms);
 
   class Alarm {
-    constructor(name, time) {
+    constructor(name, time, state) {
       this.name = name;
       this.time = time;
+      this.state = state;
     }
 
     currentTime() {
-      return new Date(Date.now());
+      const current = new Date(Date.now());
+      return current.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })
+    }
+    currentTimestamp() {
+      const current = new Date(Date.now());
+      return current.getTime();
+    }
+
+    alarmTimestamp() {
+      return this.alarmTime().getTime();
     }
 
     alarmTime() {
@@ -75,19 +126,58 @@ current: alarm
       datetime.setHours(parseInt(time[0]))
       datetime.setMinutes(parseInt(time[1]))
       datetime.setSeconds(0)
-
       return datetime;
+    }
+
+    alarmTimeString() {
+      const timeString = this.alarmTime().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })
+      return timeString;
     }
 
   }
 
-  const alarm1 = new Alarm('Morning Call', '13:30')
-  
+  const alarm1 = new Alarm('Morning Call', '21:14')
 
   function renderAlarm() {
-    const li = document.createElement('LI');
+    alarmUl.innerHTML = '';
+
+    alarmList.forEach((item, index) => {
+      const alarm = new Alarm(item.label, item.time, item.state);
+      const timeString = alarm.alarmTimeString().split(' ');
+
+      checkAlarm(alarm, index);
+
+      let li = document.createElement('LI');
+      li.innerHTML = alarmTemplate;
+      li.setAttribute('data-index', index);
+      li.querySelector('.time').innerText = `${timeString[0]}`;
+      li.querySelector('.period').innerText = `${timeString[1]}`;
+      li.querySelector('.label').innerText = item.label;
+      li.querySelector('.state').checked = item.state;
+      
+      alarmUl.appendChild(li);
+
+      li.querySelector('.state').addEventListener('click', function(e) {
+        alarmList[index].state = !alarmList[index].state
+        updateStorage('alarms', alarmList);
+      })
+    });
   }
 
+  function checkAlarm(alarm, index) {
+    if (!alarm.state) {
+      return;
+    }
+
+    if (alarm.alarmTimestamp() === alarm.currentTimestamp()) {      
+      turnOnAlarm();
+    }
+  }
+
+  function turnOnAlarm() {
+    alarmMode || alarmingModal.classList.add('active')
+    alarmMode || sound.play();
+  }
 
   function modal() {
     modalEl.classList.toggle('active');
@@ -96,10 +186,15 @@ current: alarm
   function editAlarm() {
     editMode = !editMode;
   }
+
+  function updateStorage(key, array) {
+    storage.removeItem(key);
+    storage.setItem(key, JSON.stringify(array));
+  }
+
   cancelBtn.addEventListener('click', function() {
     modalEl.classList.toggle('active');
     console.log('cancel')
-    
   });
 
   saveBtn.addEventListener('click', function() {
@@ -109,9 +204,20 @@ current: alarm
       state: document.querySelector('#alarm-state').checked
     }
     alarmList.push(obj)
+    updateStorage('alarms', alarmList);
     modalEl.classList.toggle('active');
   });
 
   editBtn.addEventListener('click', editAlarm);
   newBtn.addEventListener('click', modal);
+
+  const clearAlarmBtn = document.querySelector('.clearAlarm');
+  clearAlarmBtn.addEventListener('click', () => {
+    sound.pause();
+    alarmingModal.classList.remove('active');
+  });
+
+  setInterval(renderAlarm, 1000);
+
+  renderAlarm();
 </script>

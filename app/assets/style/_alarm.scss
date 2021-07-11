@@ -31,3 +31,25 @@
     // padding-top: .5em;
   }
 }
+
+.alarmingTextColor {
+  color: red;
+}
+
+.alarmingModal {
+  z-index: 100;
+  height: 20%;
+  border-color: rgba(255, 11, 11, .8);
+  .modal-content {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    color: red;
+  
+    .clearAlarm {
+      background-color: #fff;
+    }
+  }
+}
