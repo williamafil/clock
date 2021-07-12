@@ -4,4 +4,90 @@
 
 button {
   display: none;
+  width: 70px;
+  height: 70px;
+  line-height: 70px;
+  border-radius: 50%;
+  text-align: center;
+  text-decoration:none;
+  font-size: 1rem;
+  padding: 0em 0 0 0;
+  
+  margin: 0 2em;
+}
+
+button#start {
+  color: #2FD058;
+  background: #0A2A11;
+  border:2px solid $trueGray-900;
+  box-shadow: 0px 0px 0px 2px #0A2A11;
+}
+
+button#reset, button#lap {
+  color: $trueGray-100;
+  background: #383838;
+  border:2px solid $trueGray-900;
+  box-shadow: 0px 0px 0px 2px #383838;
+}
+
+button#pause {
+  color: red;
+  background: #6d2e2e;
+  border:2px solid $trueGray-900;
+  box-shadow: 0px 0px 0px 2px #6d2e2e;
+}
+
+.buttons {
+  display: flex;
+  justify-content: center;  
+  margin-bottom: 2em;
+}
+
+
+#timer {
+  margin: 4em auto;
+  width: 90%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  span {
+    color: $trueGray-100;
+    font-size: 2rem;
+  }
+
+  .dot {
+    transform: translateY(15px);
+    color: $trueGray-100;
+    font-size: 2rem;
+    display: inline;
+  }
+
+  input {
+    margin: 0;
+    padding: 0;
+    text-align: center;
+    display: inline-block;
+    width: 30%;
+    font-family: 'Rubik', sans-serif;
+    font-size: 4.5rem;
+    font-weight: 100;
+    background-color: transparent;
+    border: 0;
+    color: $trueGray-100;
+    
+  }
+}
+
+#lap-list {
+  li {
+    display: flex;
+    justify-content: space-between;
+    padding: 1em 1em;
+    border-top: 1px solid $trueGray-800;
+  }
+
+  li:last-child {
+    border-bottom: 1px solid $trueGray-800;
+  }
 }

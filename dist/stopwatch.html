@@ -28,10 +28,12 @@
     </header>
 
     <main>
-      <h2>stopwatch</h2>
-
-<div id="timer">
-  00 : 00 : 00 : 00
+      <div id="timer">
+  <input class="time" type="text" value="00" disabled />
+  <span>:</span>
+  <input class="time" type="text" value="00" disabled  />
+  <span class="dot">.</span>
+  <input class="time" type="text" value="00" disabled  />
 </div>
 
 <div class="buttons">
@@ -101,10 +103,14 @@
     let h = hours < 10 ? "0" + hours : hours;
     let m = minutes < 10 ? "0" + minutes : minutes;
     let s = seconds < 10 ? "0" + seconds : seconds;
-    let ms = String(milliseconds).substring(0, 2);
+    let ms = milliseconds < 10 ? "0" + milliseconds : String(milliseconds).substring(0, 2);
 
     timer.innerHTML = `
-      ${h} : ${m} : ${s} : ${ms} 
+      <input class="time" type="text" value="${m}" disabled />
+      <span>:</span>
+      <input class="time" type="text" value="${s}" disabled />
+      <span class="dot">.</span>
+      <input class="time" type="text" value="${ms}" disabled />
     `;
   }
 
@@ -131,7 +137,8 @@
   function lapTime(lapTime) {
     const li = document.createElement('LI');
     li.innerHTML = `
-      <p>${lapTime.hours} : ${lapTime.minutes} : ${lapTime.seconds} : ${lapTime.milliseconds}</p>
+      <p>Lap ${lapUl.childElementCount + 1}</p>
+      <p>${lapTime.minutes} : ${lapTime.seconds} . ${lapTime.milliseconds}</p>
     `;
     lapUl.appendChild(li)
   }
@@ -172,7 +179,6 @@
   });
 
   lap.addEventListener('click', function() {
-    console.log('lap')
     const obj = {
       hours,
       minutes,
@@ -184,7 +190,6 @@
     lapTime(obj);
 
     updateStorage('laps', lapList)
-    console.log(lapList)
   });
 
   render(hours, minutes, seconds, milliseconds);
