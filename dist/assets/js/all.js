@@ -1,8 +1,9 @@
 "use strict";
 
 $(document).ready(function () {
-  var currentPath = location.pathname.split('.')[0].replace('/', '') || 'index';
-  var currentPageLink = document.querySelector("#".concat(currentPath, "-link"));
+  var currentPath = location.pathname.split('/');
+  var pathName = currentPath[currentPath.length - 1] === '' ? 'index' : currentPath[currentPath.length - 1].split('.')[0];
+  var currentPageLink = document.querySelector("#".concat(pathName, "-link"));
   currentPageLink.classList.toggle('active');
 });
 //# sourceMappingURL=all.js.map
