@@ -6,7 +6,100 @@ current: stopwatch
 ---
 <h2>stopwatch</h2>
 
+<div id="timer">
+  00 : 00 : 00 : 00
+</div>
+
+<div class="buttons">
+  <button id="start">Start</button>
+  <button id="pause">Pause</button>
+  <button id="lap">Lap</button>
+  <button id="reset">Reset</button>  
+</div>
+
 
 <script>
-  console.log('stopwatch')
+  console.log('stopwatch');
+
+  const start = document.querySelector('#start');
+  const pause = document.querySelector('#pause');
+  const lap   = document.querySelector('#lap');
+  const reset = document.querySelector('#reset');
+
+  let [hours, minutes, seconds, milliseconds] = [0,0,0,0];
+  let timer = document.querySelector('#timer');
+  let intervalId;
+
+  // TODO: inProgress: false => start & reset
+  // TODO: inProgress: true => stop & lap
+
+  const time = [0,0,0,0]
+  const timeObj =  {
+    hour: 0,
+    minute: 0,
+    second: 0,
+    millisecond: 0,
+  }
+
+  // class Stopwatch {
+  //   constructor(time, obj) {
+  //     this.time = time;
+  //     this.hour = obj.hour;
+  //     this.minute = obj.minute;
+  //     this.second = obj.second;
+  //     this.millisecond = obj.millisecond;
+  //     this.intervalId;
+  //   }
+
+  //   start() {
+  //     intervalId = setInterval(this.timer(), 10);
+  //   }
+
+  //   timer() {
+  //     console.log('timer')
+  //     this.millisecond += 10;
+  //     this.millisecond <= 100 ? '0' + this.millisecond : this.millisecond;
+  //     this.second <= 10 ? '0' + this.second : this.second;
+  //     this.hour <= 10 ? '0' + this.hour : this.hour;
+
+  //     return `${this.hour} : ${this.minute} : ${this.second} : ${this.millisecond}`;
+  //   }
+  // }
+
+  // const stopwatch = new Stopwatch(time, timeObj);
+
+
+  function renderTimer() {
+    milliseconds += 11;
+
+    if (milliseconds >= 1000) {
+      milliseconds = 0;
+      seconds++;
+
+      if (seconds >= 60) {
+        seconds = 0;
+        minutes++;
+
+        if (minutes >= 60) {
+          minutes = 0;
+          hours++;
+        }
+      }
+    }
+    let h = hours < 10 ? "0" + hours : hours;
+    let m = minutes < 10 ? "0" + minutes : minutes;
+    let s = seconds < 10 ? "0" + seconds : seconds;
+    let ms = String(milliseconds).substring(0, 2);
+    // let ms = milliseconds < 100 ? "00" + milliseconds : milliseconds;
+    // milliseconds < 100 ? "0" + milliseconds : milliseconds;
+
+    timer.innerHTML = `
+      ${h} : ${m} : ${s} : ${ms} 
+    `;
+  }
+
+  start.addEventListener('click', function() {
+    intervalId = setInterval(renderTimer, 11);
+  });
+
 </script>

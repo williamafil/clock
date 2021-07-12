@@ -18,7 +18,7 @@ current: alarm
 </div>
 
 <ul class="main-list">
-  <li data-index="0">
+  <!-- <li data-index="0">
     <div class="delete-btn hidden"><span>Delete</span></div>
     <section class="alarm time-string">
       <p><span class="time">02:58</span><span class="period">PM</span></p>
@@ -32,7 +32,7 @@ current: alarm
         </label>
       </div>
     </section>  
-  </li>
+  </li> -->
 </ul>
 
 <div class="modal newAlarmModal">
@@ -53,8 +53,6 @@ current: alarm
         <input id="alarm-state" class="state" type="checkbox" checked />
         <span class="slider"></span>
       </label>
-
-      
     </div>
   </div>
   <div class="modal-footer">
@@ -63,11 +61,7 @@ current: alarm
   </div>
 </div>
 
-
-
 <script>
-  console.log('alarm')
-
   const editBtn = document.querySelector('#edit-clock');
   const newBtn = document.querySelector('#new-clock');
   const modalEl = document.querySelector('.newAlarmModal');
@@ -100,7 +94,7 @@ current: alarm
 
   const defaultList = [
     {
-      label: '吃早餐 🍔🍟',
+      label: 'Dinner Time 🍔🍟',
       time: '21:15',
       state: true
     },
