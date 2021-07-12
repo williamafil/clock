@@ -11,65 +11,48 @@ current: stopwatch
 </div>
 
 <div class="buttons">
-  <button id="start">Start</button>
+  <button id="start" class="active">Start</button>
   <button id="pause">Pause</button>
   <button id="lap">Lap</button>
-  <button id="reset">Reset</button>  
+  <button id="reset" class="active">Reset</button>  
 </div>
 
+<ul id="lap-list"></ul>
 
 <script>
-  console.log('stopwatch');
-
   const start = document.querySelector('#start');
   const pause = document.querySelector('#pause');
   const lap   = document.querySelector('#lap');
   const reset = document.querySelector('#reset');
+  const lapUl = document.querySelector('#lap-list')
 
-  let [hours, minutes, seconds, milliseconds] = [0,0,0,0];
+  // let [hours, minutes, seconds, milliseconds] = [0,0,0,0];
   let timer = document.querySelector('#timer');
   let intervalId;
 
-  // TODO: inProgress: false => start & reset
-  // TODO: inProgress: true => stop & lap
+  let inProgress = false;
 
-  const time = [0,0,0,0]
-  const timeObj =  {
-    hour: 0,
-    minute: 0,
-    second: 0,
-    millisecond: 0,
+  const defaultTime = {
+    hours: 0,
+    minutes: 0,
+    seconds: 0,
+    milliseconds: 0
   }
 
-  // class Stopwatch {
-  //   constructor(time, obj) {
-  //     this.time = time;
-  //     this.hour = obj.hour;
-  //     this.minute = obj.minute;
-  //     this.second = obj.second;
-  //     this.millisecond = obj.millisecond;
-  //     this.intervalId;
-  //   }
-
-  //   start() {
-  //     intervalId = setInterval(this.timer(), 10);
-  //   }
-
-  //   timer() {
-  //     console.log('timer')
-  //     this.millisecond += 10;
-  //     this.millisecond <= 100 ? '0' + this.millisecond : this.millisecond;
-  //     this.second <= 10 ? '0' + this.second : this.second;
-  //     this.hour <= 10 ? '0' + this.hour : this.hour;
-
-  //     return `${this.hour} : ${this.minute} : ${this.second} : ${this.millisecond}`;
-  //   }
-  // }
-
-  // const stopwatch = new Stopwatch(time, timeObj);
+  const storage = window.localStorage;
+  storage.stopwatch || storage.setItem('stopwatch', JSON.stringify(defaultTime))
+  const timeObj = JSON.parse(storage.getItem("stopwatch"))
+  
+  // const lapList = storage.laps || [];
+  let lapList = JSON.parse(storage.getItem('laps')) || [];
 
 
-  function renderTimer() {
+  let hours = timeObj.hours;
+  let minutes = timeObj.minutes;
+  let seconds = timeObj.seconds;
+  let milliseconds = timeObj.milliseconds;
+  
+  function setTimer() {
     milliseconds += 11;
 
     if (milliseconds >= 1000) {
@@ -86,20 +69,100 @@ current: stopwatch
         }
       }
     }
+    render(hours, minutes, seconds, milliseconds);
+  }
+
+  function render(hours, minutes, seconds, milliseconds) {
+
     let h = hours < 10 ? "0" + hours : hours;
     let m = minutes < 10 ? "0" + minutes : minutes;
     let s = seconds < 10 ? "0" + seconds : seconds;
     let ms = String(milliseconds).substring(0, 2);
-    // let ms = milliseconds < 100 ? "00" + milliseconds : milliseconds;
-    // milliseconds < 100 ? "0" + milliseconds : milliseconds;
 
     timer.innerHTML = `
       ${h} : ${m} : ${s} : ${ms} 
     `;
   }
 
+  function toggleButtons() {
+    inProgress = !inProgress;
+    pause.classList.toggle('active');
+    lap.classList.toggle('active');
+    start.classList.toggle('active');
+    reset.classList.toggle('active');
+  }
+
+  function updateStorage(key, obj) {
+    storage.removeItem(key);
+    storage.setItem(key, JSON.stringify(obj));
+  }
+
+  function renderLapList() {
+    lapUl.innerHTML = '';
+    lapList.forEach((item) => {
+      lapTime(item);
+    })
+  }
+
+  function lapTime(lapTime) {
+    const li = document.createElement('LI');
+    li.innerHTML = `
+      <p>${lapTime.hours} : ${lapTime.minutes} : ${lapTime.seconds} : ${lapTime.milliseconds}</p>
+    `;
+    lapUl.appendChild(li)
+  }
+
   start.addEventListener('click', function() {
-    intervalId = setInterval(renderTimer, 11);
+    intervalId = setInterval(() => {
+      setTimer();
+      updateStorage('stopwatch', {hours, minutes, seconds, milliseconds});
+      
+    }, 11);
+    updateStorage('laps', lapList);
+    toggleButtons();
+    renderLapList();
   });
 
+  pause.addEventListener('click', function() {
+    clearInterval(intervalId);
+    toggleButtons();
+  });
+
+  reset.addEventListener('click', function() {
+    hours = 0;
+    minutes = 0;
+    seconds = 0;
+    milliseconds = 0;
+
+    updateStorage('stopwatch', {
+      hours: 0,
+      minutes: 0,
+      seconds: 0,
+      milliseconds: 0    
+    });
+    render(hours, minutes, seconds, milliseconds);
+    
+    lapList = [];
+    updateStorage('laps', lapList);
+    renderLapList();
+  });
+
+  lap.addEventListener('click', function() {
+    console.log('lap')
+    const obj = {
+      hours,
+      minutes,
+      seconds,
+      milliseconds
+    }
+
+    lapList.push(obj);
+    lapTime(obj);
+
+    updateStorage('laps', lapList)
+    console.log(lapList)
+  });
+
+  render(hours, minutes, seconds, milliseconds);
+  renderLapList();
 </script>

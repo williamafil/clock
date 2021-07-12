@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+  <meta
+    http-equiv="X-UA-Compatible"
+    content="ie=edge"
+  >
+  <title>Time App - World Clock</title>
+  <!-- <link rel="stylesheet" href="./assets/style/reset.css"> -->
+  <link rel="stylesheet" href="./assets/style/all.css">
+</head>
+
+<body>
+  <div class="container">
+    <header>
+
+      <h1>
+        World Clock
+      </h1>
+
+
+    </header>
+
+    <main>
+      <div class="edit-new-wrapper">
+  <h2 id="edit-clock">Edit</h2>
+  <h2 id="new-clock">+</h2>
+</div>
+
+<ul class="main-list"></ul>
+
+<div class="modal"></div>
+
+<script>
+  const timezones = [
+    {
+      name: 'Taipei, Taiwan',
+      timezone: 'Asia/Taipei'
+    },
+    {
+      name: 'Seoul, South Korea',
+      timezone: 'Asia/Seoul'
+    },
+    {
+      name: 'Tokyo, Japan',
+      timezone: 'Asia/Tokyo'
+    },
+    {
+      name: 'Phoenix, U.S.A.',
+      timezone: 'America/Phoenix'
+    },
+    {
+      name: 'New York, U.S.A.',
+      timezone: 'America/New_York'
+    },
+    {
+      name: 'Montreal, Canada',
+      timezone: 'America/Montreal'
+    },
+    {
+      name: 'Vancouver, Canada',
+      timezone: 'America/Vancouver'
+    },
+    {
+      name: 'Mexico City, U.S.A.',
+      timezone: 'America/Mexico_City'
+    },
+    {
+      name: 'Cairo, Egypt',
+      timezone: 'Africa/Cairo'
+    },
+    {
+      name: 'Dubai, U.A.E.',
+      timezone: 'Asia/Dubai'
+    },
+  ]
+
+  const defaultList = [
+    {
+      name: 'Taipei, Taiwan',
+      timezone: 'Asia/Taipei'
+    },
+    {
+      name: 'Vancouver, Canada',
+      timezone: 'America/Vancouver'
+    },
+  ];
+  const storage = window.localStorage;
+  storage.clocks || storage.setItem('clocks', JSON.stringify(defaultList))
+  const myList = JSON.parse(storage.clocks);
+
+  class Clock {
+    constructor(city, timezone) {
+      this.city = city;
+      this.timezone = timezone;
+    }
+    currentDate() {
+      return new Date().getDate();
+    }
+
+    currentTime() {
+      return new Date(Date.now());
+    }
+
+    localTime() {
+      return this.currentTime().toLocaleTimeString('en-US', { timeZone: this.timezone, hour: '2-digit', minute: '2-digit' });
+    }
+
+    timezoneOffset() {
+      return -(this.localTime().getTimezoneOffset() / 60);
+    }
+
+    localTimestamp() {
+      const localeDateTimeString = this.currentTime().toLocaleString('en-US', { timeZone: this.timezone })
+      return Date.parse(localeDateTimeString);
+    }
+
+    dateDiff() {
+      const localDate = new Date(this.localTimestamp()).getDate();
+      const exp = localDate - this.currentDate();
+
+      switch (exp) {
+        case -1:
+          return 'Yesterday';
+        case 0:
+          return 'Today';
+        case 1:
+          return 'Tomorrow';
+      }
+    }
+
+    hourDiff() {
+      const localDate = new Date(this.localTimestamp()).getDate()
+      const local = Date.parse(new Date(Date.now()))
+      const diff = (this.localTimestamp() - local) / 1000 / 60 / 60;
+      return diff.toString().includes('-') ? diff : `+${diff}`;
+    }
+  }
+
+  const editBtn = document.querySelector('#edit-clock');
+  const newBtn = document.querySelector('#new-clock');
+  const modalEl = document.querySelector('.modal');
+  const modalUl = document.createElement('UL');
+  const clockUl = document.querySelector('.main-list');
+  let editMode = false;
+
+  const clockTemplate = `
+  <div class="delete-btn hidden"><span>Delete</span></div>
+  <section class="city">
+    <div class="offset-hour"></div>
+    <div class="city-name"></div>
+  </section>
+  <section class="time-string">
+    <p><span class="time"></span><span class="period"></span></p>
+  </section>
+`;
+
+  (function renderTimezoneList() {
+    modalUl.classList.add('timezone-list');
+
+    timezones.forEach((item, index) => {
+      const li = document.createElement('LI');
+      li.setAttribute('data-timezone', index);
+      li.innerText = item.name;
+      modalUl.appendChild(li)
+
+      li.addEventListener('click', createClock)
+    });
+  })();
+
+  function createClock(e) {
+    modalEl.classList.toggle('active');
+
+    myList.push(timezones[e.target.dataset.timezone]);
+    updateStorage('clock', myList);
+    renderClock();
+  }
+
+  function updateStorage(key, clockArray) {
+    storage.removeItem(key);
+    storage.setItem(key, JSON.stringify(clockArray));
+  }
+
+  function renderClock() {
+    clockUl.innerHTML = '';
+    myList.forEach((item, index) => {
+      const clock = new Clock(item.name, item.timezone);
+      const timeString = clock.localTime().split(' ');
+
+      let li = document.createElement('LI');
+      li.setAttribute('data-index', index);
+      li.innerHTML = clockTemplate;
+      editMode && li.querySelector('.delete-btn').classList.remove('hidden')
+      li.querySelector('.offset-hour').innerText = `${clock.dateDiff()}, ${clock.hourDiff()}HRS`;
+      li.querySelector('.city-name').innerText = clock.city.split(',')[0];
+
+      li.querySelector('.time').innerText = timeString[0];
+      li.querySelector('.period').innerText = timeString[1];
+
+      clockUl.appendChild(li)
+      li.querySelector('.delete-btn').addEventListener('click', (e) => {
+        myList.splice(index, 1);
+        updateStorage('clock', myList);
+      });
+    })
+  }
+
+  function modal() {
+    modalEl.classList.toggle('active');
+    modalEl.appendChild(modalUl);
+  }
+
+  function editClock() {
+    editMode = !editMode;
+    editMode ? editBtn.innerText = 'Done' : editBtn.innerText = 'Edit'
+  }
+
+  setInterval(renderClock, 1000);
+
+  renderClock()
+  editBtn.addEventListener('click', editClock);
+  newBtn.addEventListener('click', modal);
+</script>
+    </main>
+
+
+    <footer>
+      <nav>
+        <ul>
+          <li>
+            <a
+              id="index-link"
+              href="./index.html"
+              class="nav-link"
+            />
+            <div class="svg-holder">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                xmlns:xlink="http://www.w3.org/1999/xlink"
+                aria-hidden="true"
+                role="img"
+                class="iconify iconify--jam"
+                width="32"
+                height="32"
+                preserveAspectRatio="xMidYMid meet"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M4.252 10A8.014 8.014 0 0 0 4 12c0 .69.088 1.36.252 2H7.1a19.83 19.83 0 0 1 0-4H4.252zm.818-2h2.346c.266-1.217.65-2.307 1.121-3.214A8.035 8.035 0 0 0 5.07 8zm14.678 2H16.9a19.83 19.83 0 0 1 0 4h2.848a8.047 8.047 0 0 0 0-4zm-.818-2a8.035 8.035 0 0 0-3.467-3.214c.472.907.855 1.997 1.121 3.214h2.346zm-9.818 2A17.763 17.763 0 0 0 9 12c0 .685.038 1.355.112 2h5.776a17.763 17.763 0 0 0 0-4H9.112zm.358-2h5.06a10.758 10.758 0 0 0-.783-2.177C13.119 4.568 12.447 4 12 4c-.448 0-1.119.568-1.747 1.823c-.315.632-.58 1.367-.783 2.177zm-4.4 8a8.035 8.035 0 0 0 3.467 3.214c-.472-.907-.855-1.997-1.121-3.214H5.07zm13.86 0h-2.346c-.266 1.217-.65 2.307-1.121 3.214A8.035 8.035 0 0 0 18.93 16zm-9.46 0c.203.81.468 1.545.783 2.177C10.881 19.432 11.553 20 12 20c.448 0 1.119-.568 1.747-1.823c.315-.632.58-1.367.783-2.177H9.47zM12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10s-4.477 10-10 10z"
+                  fill="currentColor"
+                ></path>
+              </svg>
+            </div>
+            <h3>World Clock</h3>
+            </a>
+          </li>
+          <li>
+            <a
+              id="alarm-link"
+              href="./alarm.html"
+              class="nav-link"
+            />
+            <div class="svg-holder">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                xmlns:xlink="http://www.w3.org/1999/xlink"
+                aria-hidden="true"
+                role="img"
+                class="iconify iconify--jam"
+                width="32"
+                height="32"
+                preserveAspectRatio="xMidYMid meet"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M13 12h2a1 1 0 0 1 0 2h-3a1 1 0 0 1-1-1V8a1 1 0 1 1 2 0v4zm7.63-1.562a9 9 0 1 1-17.26 0a5 5 0 1 1 7.668-6.387a9.102 9.102 0 0 1 1.924 0a5 5 0 1 1 7.668 6.387zm-.938-2.113a3 3 0 0 0-4.48-3.735a9.03 9.03 0 0 1 4.48 3.735zM8.787 4.59a3 3 0 0 0-4.48 3.735a9.03 9.03 0 0 1 4.48-3.735zM12 20a7 7 0 1 0 0-14a7 7 0 0 0 0 14z"
+                  fill="currentColor"
+                ></path>
+              </svg>
+            </div>
+            <h3>Alarm</h3>
+            </a>
+          </li>
+          <li>
+            <a
+              id="stopwatch-link"
+              href="./stopwatch.html"
+              class="nav-link"
+            />
+            <div class="svg-holder">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                xmlns:xlink="http://www.w3.org/1999/xlink"
+                aria-hidden="true"
+                role="img"
+                class="iconify iconify--jam"
+                width="32"
+                height="32"
+                preserveAspectRatio="xMidYMid meet"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M13 13h2a1 1 0 0 1 0 2h-3a.997.997 0 0 1-1-1v-4a1 1 0 1 1 2 0v3zM5.869 8.861a1.5 1.5 0 1 1 2.077-1.76a7.967 7.967 0 0 1 1.126-.548A2.5 2.5 0 0 1 10.5 2h3a2.5 2.5 0 0 1 1.428 4.553c.39.154.767.337 1.126.548a1.5 1.5 0 1 1 2.077 1.76a8 8 0 1 1-12.263 0zM12 20a6 6 0 1 0 0-12a6 6 0 0 0 0 12zM10.5 4a.5.5 0 0 0 0 1h3a.5.5 0 0 0 0-1h-3z"
+                  fill="currentColor"
+                ></path>
+              </svg>
+            </div>
+            <h3>Stopwatch</h3>
+            </a>
+          </li>
+          <li>
+            <a
+              id="timer-link"
+              href="./timer.html"
+              class="nav-link"
+            />
+            <div class="svg-holder">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                xmlns:xlink="http://www.w3.org/1999/xlink"
+                aria-hidden="true"
+                role="img"
+                class="iconify iconify--mdi"
+                width="32"
+                height="32"
+                preserveAspectRatio="xMidYMid meet"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M4.94 6.35c-.39-.39-.39-1.03 0-1.42a.996.996 0 0 1 1.41 0l6.72 5.38l.35.28c.78.78.78 2.05 0 2.83c-.78.78-2.05.78-2.83 0l-.28-.35l-5.37-6.72M12 20a8 8 0 0 0 8-8c0-2.21-.9-4.21-2.34-5.66l1.41-1.41A9.969 9.969 0 0 1 22 12a10 10 0 0 1-10 10A10 10 0 0 1 2 12h2a8 8 0 0 0 8 8m0-19a2 2 0 0 1 2 2a2 2 0 0 1-2 2a2 2 0 0 1-2-2a2 2 0 0 1 2-2z"
+                  fill="currentColor"
+                ></path>
+              </svg>
+            </div>
+            <h3>Timer</h3>
+            </a>
+          </li>
+        </ul>
+      </nav>
+
+    </footer>
+  </div>
+
+  <script src="./assets/js/vendors.js"></script>
+  <script src="./assets/js/all.js"></script>
+</body>
+
+</html>
