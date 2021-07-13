@@ -4,8 +4,8 @@
 
 body {
   font-size: 16px;
-  font-family: 'Rubik', sans-serif;
-  background-color: $trueGray-100;
+  font-family: "Rubik", sans-serif;
+  background-color: $trueGray-800;
   color: $trueGray-50;
 
   width: 100vw;
@@ -26,9 +26,14 @@ body {
   margin: 0 auto;
 
   background-color: $trueGray-900;
+  border-radius: 10px;
+  box-shadow: rgba(17, 17, 26, 0.1) 0px 4px 16px, rgba(17, 17, 26, 0.1) 0px 8px 24px,
+    rgba(17, 17, 26, 0.1) 0px 16px 56px;
 }
 
 header {
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
   height: 100px;
   padding: 1rem;
   background-color: $trueGray-700;
@@ -62,7 +67,7 @@ main {
 .main-list {
   display: flex;
   flex-direction: column;
-  
+
   li {
     display: flex;
     justify-content: space-between;
@@ -73,25 +78,25 @@ main {
     section {
       align-self: center;
       .offset-hour {
-        font-size: .9rem;
+        font-size: 0.9rem;
         font-weight: 400;
-        margin-bottom: .2em;
+        margin-bottom: 0.2em;
       }
       .city-name {
         font-size: 1.7rem;
         font-weight: bold;
-        letter-spacing: .02rem;
+        letter-spacing: 0.02rem;
       }
       .time {
         font-size: 3.5rem;
         font-weight: 200;
       }
-    }  
+    }
   }
 
   li:first-child {
     // border-top: 1px solid $trueGray-700;
-    padding-top: .5em;
+    padding-top: 0.5em;
   }
 
   .delete-btn {
@@ -118,10 +123,11 @@ main {
 }
 
 footer {
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
   height: 100px;
   padding: 1rem;
   background-color: $trueGray-700;
-  border-top: 1px solid $trueGray-500;
 }
 
 nav {
