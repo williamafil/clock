@@ -459,7 +459,7 @@ button#start {
   -webkit-box-shadow: 0px 0px 0px 2px #0A2A11;
           box-shadow: 0px 0px 0px 2px #0A2A11; }
 
-button#reset, button#lap {
+button#reset, button#lap, button#cancel {
   color: #f5f5f5;
   background: #383838;
   border: 2px solid #171717;
@@ -529,5 +529,113 @@ button#pause {
 
 #lap-list li:last-child {
   border-bottom: 1px solid #262626; }
+
+.hidden {
+  display: none; }
+
+.display-area {
+  position: relative;
+  height: 350px;
+  width: 100%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center; }
+
+.time-display {
+  margin: 4em auto;
+  width: 80%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center; }
+  .time-display span {
+    color: #f5f5f5;
+    font-size: 2rem; }
+  .time-display input {
+    margin: 0;
+    padding: 0;
+    text-align: center;
+    display: inline-block;
+    width: 30%;
+    font-family: 'Rubik', sans-serif;
+    font-size: 4rem;
+    font-weight: 100;
+    background-color: transparent;
+    border: 0;
+    color: #f5f5f5; }
+  .time-display input:first-child {
+    text-align: right;
+    padding-right: .2em; }
+
+.circle {
+  display: none;
+  position: absolute;
+  top: 20px;
+  left: 20px; }
+
+.time-input {
+  background-color: #171717;
+  position: absolute;
+  top: 70px;
+  width: 100%;
+  height: 150px; }
+  .time-input .selection-wrapper {
+    height: 100%;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: center;
+        -ms-flex-pack: center;
+            justify-content: center;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center; }
+  .time-input select {
+    width: 20%;
+    text-align: center;
+    border: 0;
+    background-color: #171717;
+    color: #f5f5f5; }
+    .time-input select option:not(:checked) {
+      color: #737373; }
+    .time-input select option:checked {
+      color: #fff;
+      background: #171717;
+      width: 50%;
+      margin: 0 auto; }
+  .time-input select:focus-visible,
+  .time-input select:focus,
+  .time-input select:focus-within {
+    outline: 0; }
+
+.timer-buttons {
+  margin: 1em;
+  height: 150px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between; }
+  .timer-buttons button {
+    display: none;
+    background-color: #fff;
+    margin: 1em; }
+  .timer-buttons .active {
+    display: inline-block; }
+
+.active {
+  display: block; }
 
 /*# sourceMappingURL=all.css.map */

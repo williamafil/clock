@@ -4,9 +4,367 @@ layout: ./app/layout.ejs
 engine: ejs
 current: timer
 ---
-<h2>timer</h2>
+<div class="display-area">
 
+  <div class="time-display">
+    <input id="hour" class="time" type="text" value="0" />
+    <span>:</span>
+    <input id="min" class="time" type="text" value="0" />
+    <span>:</span>
+    <input id="sec" class="time" type="text" value="0" />
+  </div>
+  
+  <svg class="circle" version="1.1" baseProfile="full" xmlns="http://www.w3.org/2000/svg" height="350" width="350" viewBox="0 0 350 350">
+    <!-- perimeter: 2 * pi * r => 2 * pi * 155 = 973.893722613 -->
+    <circle  fill="transparent" stroke="#333" stroke-width="10" r="155" cx="40" cy="165" transform="rotate(-90 100 100)" stroke-dasharray="974"></circle>
+    <circle id="progress-circle" fill="transparent" stroke="orange" stroke-width="10" r="155" cx="40" cy="165" transform="rotate(-90 100 100)" stroke-dasharray="974" stroke-dashoffset="0"></circle>
+  </svg>
+
+  <div class="time-input">
+    <div class="selection-wrapper">
+      <select name="hour" id="hour-select" size="4">
+        <option value="0" selected>0</option>
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        <option value="6">6</option>
+        <option value="7">7</option>
+        <option value="8">8</option>
+        <option value="9">9</option>
+        <option value="10">10</option>
+        <option value="11">11</option>
+        <option value="12">12</option>
+        <option value="13">13</option>
+        <option value="14">14</option>
+        <option value="15">15</option>
+        <option value="16">16</option>
+        <option value="17">17</option>
+        <option value="18">18</option>
+        <option value="19">19</option>
+        <option value="20">20</option>
+        <option value="21">21</option>
+        <option value="22">22</option>
+        <option value="23">23</option>
+      </select>
+      <span>hours</span>
+      <select name="min" id="min-select"  size="4">
+        <option value="0" selected>0</option>
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        <option value="6">6</option>
+        <option value="7">7</option>
+        <option value="8">8</option>
+        <option value="9">9</option>
+        <option value="10">10</option>
+        <option value="11">11</option>
+        <option value="12">12</option>
+        <option value="13">13</option>
+        <option value="14">14</option>
+        <option value="15">15</option>
+        <option value="16">16</option>
+        <option value="17">17</option>
+        <option value="18">18</option>
+        <option value="19">19</option>
+        <option value="20">20</option>
+        <option value="21">21</option>
+        <option value="22">22</option>
+        <option value="23">23</option>
+        <option value="24">24</option>
+        <option value="25">25</option>
+        <option value="26">26</option>
+        <option value="27">27</option>
+        <option value="28">28</option>
+        <option value="29">29</option>
+        <option value="30">30</option>
+        <option value="31">31</option>
+        <option value="32">32</option>
+        <option value="33">33</option>
+        <option value="34">34</option>
+        <option value="35">35</option>
+        <option value="36">36</option>
+        <option value="37">37</option>
+        <option value="38">38</option>
+        <option value="39">39</option>
+        <option value="40">40</option>
+        <option value="41">41</option>
+        <option value="42">42</option>
+        <option value="43">43</option>
+        <option value="44">44</option>
+        <option value="45">45</option>
+        <option value="46">46</option>
+        <option value="47">47</option>
+        <option value="48">48</option>
+        <option value="49">49</option>
+        <option value="50">50</option>
+        <option value="51">51</option>
+        <option value="52">52</option>
+        <option value="53">53</option>
+        <option value="54">54</option>
+        <option value="55">55</option>
+        <option value="56">56</option>
+        <option value="57">57</option>
+        <option value="58">58</option>
+        <option value="59">59</option>
+      </select>
+      <span>min</span>
+      <select name="sec" id="sec-select"  size="4">
+        <option value="0" selected>0</option>
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        <option value="6">6</option>
+        <option value="7">7</option>
+        <option value="8">8</option>
+        <option value="9">9</option>
+        <option value="10">10</option>
+        <option value="11">11</option>
+        <option value="12">12</option>
+        <option value="13">13</option>
+        <option value="14">14</option>
+        <option value="15">15</option>
+        <option value="16">16</option>
+        <option value="17">17</option>
+        <option value="18">18</option>
+        <option value="19">19</option>
+        <option value="20">20</option>
+        <option value="21">21</option>
+        <option value="22">22</option>
+        <option value="23">23</option>
+        <option value="24">24</option>
+        <option value="25">25</option>
+        <option value="26">26</option>
+        <option value="27">27</option>
+        <option value="28">28</option>
+        <option value="29">29</option>
+        <option value="30">30</option>
+        <option value="31">31</option>
+        <option value="32">32</option>
+        <option value="33">33</option>
+        <option value="34">34</option>
+        <option value="35">35</option>
+        <option value="36">36</option>
+        <option value="37">37</option>
+        <option value="38">38</option>
+        <option value="39">39</option>
+        <option value="40">40</option>
+        <option value="41">41</option>
+        <option value="42">42</option>
+        <option value="43">43</option>
+        <option value="44">44</option>
+        <option value="45">45</option>
+        <option value="46">46</option>
+        <option value="47">47</option>
+        <option value="48">48</option>
+        <option value="49">49</option>
+        <option value="50">50</option>
+        <option value="51">51</option>
+        <option value="52">52</option>
+        <option value="53">53</option>
+        <option value="54">54</option>
+        <option value="55">55</option>
+        <option value="56">56</option>
+        <option value="57">57</option>
+        <option value="58">58</option>
+        <option value="59">59</option>
+      </select>
+      <span>sec</span>
+    </div>
+    
+  </div>
+</div>
+
+<div class="buttons timer-buttons">
+  <button id="cancel" class="active" type="button">Cancel</button>
+  <button id="start" class="active" type="button">Start</button>
+  <button id="pause" class="" type="button">Pause</button>
+</div>
 
 <script>
-  console.log('timer')
+const svg = document.querySelector('.circle');
+const circle = document.querySelector('#progress-circle');
+const timeInputModal = document.querySelector('.time-input');
+const hourSelect = document.querySelector('#hour-select');
+const minSelect = document.querySelector('#min-select');
+const secSelect = document.querySelector('#sec-select');
+const hourDisplay = document.querySelector('#hour');
+const minDisplay = document.querySelector('#min');
+const secDisplay = document.querySelector('#sec');
+const startBtn = document.querySelector('#start');
+const pauseBtn = document.querySelector('#pause');
+const cancelBtn = document.querySelector('#cancel');
+
+class Timer {
+  constructor(timeSelect, timeDisplay, startBtn, pauseBtn, resetBtn, timeInputModal, svg, callbacks) {
+    Object.assign(this, timeSelect);
+    Object.assign(this, timeDisplay);
+    this.startBtn = startBtn;
+    this.pauseBtn = pauseBtn;
+    this.cancelBtn = cancelBtn;
+    this.timeInputModal = timeInputModal;
+    this.svg = svg;
+
+    if (callbacks) {
+      this.onStart = callbacks.onStart;
+      this.onNext = callbacks.onNext;
+      this.onComplete = callbacks.onComplete;
+    }
+
+    this.startBtn.addEventListener('click', this.start);
+    this.pauseBtn.addEventListener('click', this.pause);
+    this.cancelBtn.addEventListener('click', this.cancel);
+  }
+
+  timeObjInSecs = () => {
+    return (this.timeObj.hour * 60 * 60) + (this.timeObj.min * 60) + this.timeObj.sec;
+  }
+
+  start = () => {
+    if (this.totalSecs() === 0) {
+      console.log('000000')
+      alert('Pleas select your time.');
+      return;
+    }
+    this.timeInputModal.classList.add('hidden');
+    this.svg.classList.add('active');
+    this.startBtn.classList.toggle('active');
+    this.pauseBtn.classList.toggle('active');
+
+    if (this.hourDisplay.value === "0" && this.minDisplay.value === "0" && this.secDisplay.value === "0") {
+      this.timeObj = {
+        hour: parseInt(this.hourSelect.value),
+        min: parseInt(this.minSelect.value),
+        sec: parseInt(this.secSelect.value)
+      }
+    } else {
+      this.timeObj = {
+        hour: parseInt(this.hourDisplay.value),
+        min: parseInt(this.minDisplay.value),
+        sec: parseInt(this.secDisplay.value)
+      }
+    }
+
+    if (this.onStart) {
+      this.onStart(this.timeObjInSecs(), this.totalSecs());
+    }
+
+    this.next();
+    this.intervalId = setInterval(this.next, 1000);
+  }
+
+  totalSecs = () => {
+    return (parseInt(this.hourSelect.value) * 60 * 60) + (parseInt(this.minSelect.value) * 60) + parseInt(this.secSelect.value);
+  }
+
+  pause = () => {
+    clearInterval(this.intervalId);
+    this.startBtn.classList.toggle('active');
+    this.pauseBtn.classList.toggle('active');
+  }
+
+  next = () => {
+    console.log('tick', this.timeObj.hour, ':', this.timeObj.min, ':', this.timeObj.sec )
+    // Set display time
+    this.hourDisplay.value = this.timeObj.hour;
+    this.minDisplay.value = this.timeObj.min;
+    this.secDisplay.value = this.timeObj.sec;
+
+    if (this.timeObjInSecs() <= 0) {
+      clearInterval(this.intervalId);
+      if (this.onComplete) {
+        this.onComplete();
+        
+        this.startBtn.classList.toggle('active');
+        this.pauseBtn.classList.toggle('active');
+        this.timeInputModal.classList.remove('hidden');
+        this.svg.classList.remove('active');
+
+        this.hourDisplay.value = "0";
+        this.minDisplay.value = "0";
+        this.secDisplay.value = "0";
+      }
+      return;
+    }
+
+    if (this.onNext) {
+      this.onNext(this.timeObjInSecs(), this.totalSecs());
+    }
+
+    // 24hr => 1440min * 60sec => 86400
+    // 1hr => 60min * 60sec => 3600sec
+    // 1min => 60sec
+
+    if (this.timeObjInSecs() <= 86400 && this.timeObjInSecs() >= 3600) {
+      // > 1hr
+      if ( this.timeObj.sec <= 0) {
+        // 0sec
+        if (this.timeObj.min <= 0) {
+          this.timeObj.min = 60;
+          this.timeObj.hour--;
+        }
+        this.timeObj.sec = 60;
+        this.timeObj.min--;
+      }
+      // sec > 0
+      this.timeObj.sec--;
+    } else if (this.timeObjInSecs() <= 3600 && this.timeObjInSecs() >= 60) {
+      //  > 1min & < 1hr
+      if (this.timeObjInSecs() === 3600) {
+        // sec === 3600sec
+        this.timeObj.hour = 0;
+        this.timeObj.min = 59;
+        this.timeObj.sec = 60;  
+      }
+      if ( this.timeObj.sec <= 0) {
+        this.timeObj.sec = 60;
+        this.timeObj.min--;
+      }
+      this.timeObj.sec--;
+    } else {
+      // < 1 min
+      this.timeObj.sec--;
+    }
+  }
+
+  cancel = () => {
+    clearInterval(this.intervalId);
+    this.startBtn.classList.toggle('active');
+    this.pauseBtn.classList.toggle('active');
+    this.timeInputModal.classList.remove('hidden');
+    this.svg.classList.remove('active');
+
+    this.hourDisplay.value = "0";
+    this.minDisplay.value = "0";
+    this.secDisplay.value = "0";
+  }
+}
+
+const timer = new Timer(
+  {hourSelect, minSelect,secSelect},
+  {hourDisplay, minDisplay, secDisplay},
+  startBtn,
+  pauseBtn,
+  cancelBtn,
+  timeInputModal,
+  svg,
+  {
+    onStart(currentTimeInSec, totalSecs) {
+      const progress = 974 - ((currentTimeInSec / totalSecs) * 974);
+      circle.setAttribute('stroke-dashoffset', progress);
+    },
+    onNext(currentTimeInSec, totalSecs) {
+      const progress = 974 - ((currentTimeInSec / totalSecs) * 974);
+      circle.setAttribute('stroke-dashoffset', progress);
+    },
+    onComplete() {
+      circle.setAttribute('stroke-dashoffset', 974);
+    }
+  }
+);
 </script>
