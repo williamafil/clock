@@ -29,18 +29,39 @@
 
     <main>
       <div id="timer">
-  <input class="time" type="text" value="00" disabled />
+  <input
+    class="time"
+    type="text"
+    value="00"
+    disabled
+  />
   <span>:</span>
-  <input class="time" type="text" value="00" disabled  />
+  <input
+    class="time"
+    type="text"
+    value="00"
+    disabled
+  />
   <span class="dot">.</span>
-  <input class="time" type="text" value="00" disabled  />
+  <input
+    class="time"
+    type="text"
+    value="00"
+    disabled
+  />
 </div>
 
 <div class="buttons">
-  <button id="start" class="active">Start</button>
+  <button
+    id="start"
+    class="active"
+  >Start</button>
   <button id="pause">Pause</button>
   <button id="lap">Lap</button>
-  <button id="reset" class="active">Reset</button>  
+  <button
+    id="reset"
+    class="active"
+  >Reset</button>
 </div>
 
 <ul id="lap-list"></ul>
@@ -48,7 +69,7 @@
 <script>
   const start = document.querySelector('#start');
   const pause = document.querySelector('#pause');
-  const lap   = document.querySelector('#lap');
+  const lap = document.querySelector('#lap');
   const reset = document.querySelector('#reset');
   const lapUl = document.querySelector('#lap-list')
 
@@ -68,8 +89,7 @@
   const storage = window.localStorage;
   storage.stopwatch || storage.setItem('stopwatch', JSON.stringify(defaultTime))
   const timeObj = JSON.parse(storage.getItem("stopwatch"))
-  
-  // const lapList = storage.laps || [];
+
   let lapList = JSON.parse(storage.getItem('laps')) || [];
 
 
@@ -77,7 +97,7 @@
   let minutes = timeObj.minutes;
   let seconds = timeObj.seconds;
   let milliseconds = timeObj.milliseconds;
-  
+
   function setTimer() {
     milliseconds += 11;
 
@@ -143,23 +163,23 @@
     lapUl.appendChild(li)
   }
 
-  start.addEventListener('click', function() {
+  start.addEventListener('click', function () {
     intervalId = setInterval(() => {
       setTimer();
-      updateStorage('stopwatch', {hours, minutes, seconds, milliseconds});
-      
+      updateStorage('stopwatch', { hours, minutes, seconds, milliseconds });
+
     }, 11);
     updateStorage('laps', lapList);
     toggleButtons();
     renderLapList();
   });
 
-  pause.addEventListener('click', function() {
+  pause.addEventListener('click', function () {
     clearInterval(intervalId);
     toggleButtons();
   });
 
-  reset.addEventListener('click', function() {
+  reset.addEventListener('click', function () {
     hours = 0;
     minutes = 0;
     seconds = 0;
@@ -169,16 +189,16 @@
       hours: 0,
       minutes: 0,
       seconds: 0,
-      milliseconds: 0    
+      milliseconds: 0
     });
     render(hours, minutes, seconds, milliseconds);
-    
+
     lapList = [];
     updateStorage('laps', lapList);
     renderLapList();
   });
 
-  lap.addEventListener('click', function() {
+  lap.addEventListener('click', function () {
     const obj = {
       hours,
       minutes,
